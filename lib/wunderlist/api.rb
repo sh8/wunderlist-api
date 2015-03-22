@@ -56,6 +56,7 @@ module Wunderlist
       case method
       when :get then self.get(url, options)
       when :post then self.post(url, options)
+      when :put then self.put(url, options)
       end
     end
 
@@ -93,6 +94,23 @@ module Wunderlist
 
       JSON.parse(response.body)
     end
+
+    def put(url, options = {})
+
+      response = @conn.put do |req|
+        req.url url
+        req.body = options.to_json
+        req.headers = {
+          'X-Access-Token' => self.access_token,
+          'X-Client-ID' => self.client_id,
+          'Content-Type' => 'text/json',
+          'Content-Encoding' => 'UTF-8'
+        }
+      end
+
+      JSON.parse(response.body)
+    end
+
 
     def get_list_ids(list_names = [])
       lists = self.lists
