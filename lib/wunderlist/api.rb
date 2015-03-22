@@ -20,10 +20,21 @@ module Wunderlist
       @client_id = options[:client_id]
     end
 
+    def lists
+      self.request :get, 'api/v1/lists'
+    end
+
+    def tasks(list_names = [])
+      list_ids = get_list_ids(list_names)
+      list_ids.each do |list_id|
+        self.request :get, 'api/v1/tasks', {:list_id => list_id}
+      end
+    end
+
     def request(method, url, options = {})
       case method
-      when :get then self.get(url, options = {})
-      when :post then self.post(url, options = {})
+      when :get then self.get(url, options)
+      when :post then self.post(url, options)
       end
     end
 
@@ -31,8 +42,10 @@ module Wunderlist
 
       response = @conn.get do |req|
         req.url url
-        if options[:id]
-          req.params[:id] = options[:id]
+        if options
+          options.each do |k, v|
+            req.params[k] = v
+          end
         end
         req.headers = {
           'X-Access-Token' => self.access_token,
@@ -48,8 +61,10 @@ module Wunderlist
 
       response = @conn.post do |req|
         req.url url
-        if options[:id]
-          req.params[:id] = options[:id]
+        if options
+          options.each do |k, v|
+            req.params[k] = v
+          end
         end
         req.headers = {
           'X-Access-Token' => self.access_token,
@@ -59,5 +74,14 @@ module Wunderlist
 
       JSON.parse(response.body)
     end
+
+    def get_list_ids(list_names = [])
+      lists = self.lists
+      if !list_names.empty?
+        lists = lists.select{|elm| list_names.include?(elm["title"])}
+      end
+      lists.map{|list| list['id']}
+    end
+
   end
 end
