@@ -1,4 +1,5 @@
 require "wunderlist/version"
+require "wunderlist/task"
 require 'faraday'
 require 'json'
 
@@ -28,14 +29,27 @@ module Wunderlist
       list_ids = get_list_ids(list_names)
       tasks = []
       list_ids.each do |list_id|
-        task = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
-        if !task.empty?
-          tasks += task
+        list_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+        if !list_tasks.empty?
+          list_tasks.each do |t|
+            task = Wunderlist::Task.new(t)
+            task.api = self
+            tasks << task
+          end
         end
       end
 
       tasks
 
+    end
+
+    def create_task(list_name, attrs = {})
+      list_name = [list_name]
+      list_id = get_list_ids(list_name)[0]
+      attrs['list_id'] = list_id
+      attrs['api'] = self
+      @task = Wunderlist::Task.new(attrs)
+      @task.save
     end
 
     def request(method, url, options = {})
@@ -68,14 +82,12 @@ module Wunderlist
 
       response = @conn.post do |req|
         req.url url
-        if options
-          options.each do |k, v|
-            req.params[k] = v
-          end
-        end
+        req.body = options.to_json
         req.headers = {
           'X-Access-Token' => self.access_token,
-          'X-Client-ID' => self.client_id
+          'X-Client-ID' => self.client_id,
+          'Content-Type' => 'text/json',
+          'Content-Encoding' => 'UTF-8'
         }
       end
 
