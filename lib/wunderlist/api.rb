@@ -24,11 +24,18 @@ module Wunderlist
       self.request :get, 'api/v1/lists'
     end
 
-    def tasks(list_names = [])
+    def tasks(list_names = [], completed = false)
       list_ids = get_list_ids(list_names)
+      tasks = []
       list_ids.each do |list_id|
-        self.request :get, 'api/v1/tasks', {:list_id => list_id}
+        task = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+        if !task.empty?
+          tasks += task
+        end
       end
+
+      tasks
+
     end
 
     def request(method, url, options = {})
