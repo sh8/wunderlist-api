@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Wunderlist::VERSION
   spec.authors       = ["shun3475"]
   spec.email         = ["imokenpi3475@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{WunderList Ruby API Client.}
+  spec.description   = %q{You can manage Your Wunderlist Data with Ruby}
   spec.homepage      = ""
   spec.license       = "MIT"
 
