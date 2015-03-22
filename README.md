@@ -18,7 +18,29 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+# You must create API CLIENT at first.
+wl = Wunderlist::API.new({
+:access_token => <your access token>,
+:client_id => <your client id>
+})
+
+# You can create Task
+wl.create_task(LIST_NAME, {'title' => 'Hello World', 'completed' => true, 'due_date' => '2015-03-25' })
+
+# You can get Wunderlist::Task Object
+task = wl.tasks([LIST_NAME])[0]
+=> #<Wunderlist::Task:0x00000000000> 
+
+# You can create and update note.
+task.notes.each do |note|
+  note.content = "Hello World"
+  note.update
+end
+
+=> #<Wunderlist::Note:0x00000000000>
+
+```
 
 ## Contributing
 
