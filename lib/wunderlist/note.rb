@@ -6,8 +6,7 @@ module Wunderlist
 
     include Wunderlist::Helper
 
-    attr_accessor :content, :api
-    attr_reader :id, :task_id, :created_at, :updated_at, :revision
+    attr_accessor :id, :content, :api, :task_id, :created_at, :updated_at, :revision
 
     def initialize(options = {})
       @api = options['api']
@@ -20,15 +19,26 @@ module Wunderlist
     end
 
     def update
-      if self.id.nil?
-        self.create
-      else
-        self.api.request :put, "api/v1/notes/#{self.id}", self.to_hash
-      end
+      self.api.request :put, "api/v1/notes/#{self.id}", self.to_hash
     end
 
-    def create
-      puts self.api.request :post, "api/v1/notes", self.to_hash
+    def save
+      if self.id.nil?
+        res = self.api.request :post, "api/v1/notes", self.to_hash
+      else
+        res = self.update
+      end
+      self.set_attrs(res)
+    end
+
+    def set_attrs(res)
+      self.api = res['api']
+      self.id = res['id']
+      self.task_id = res['task_id']
+      self.content = res['content']
+      self.created_at = res['created_at']
+      self.updated_at = res['updated_at']
+      self.revision = res['revision']
     end
 
   end

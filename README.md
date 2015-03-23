@@ -25,20 +25,22 @@ wl = Wunderlist::API.new({
 :client_id => <your client id>
 })
 
-# You can create Task
-wl.create_task(LIST_NAME, {'title' => 'Hello World', 'completed' => true, 'due_date' => '2015-03-25' })
 
-# You can get Wunderlist::Task Object
-task = wl.tasks([LIST_NAME])[0]
-=> #<Wunderlist::Task:0x00000000000> 
+# You can create Task
+task = wl.new_task(LIST_NAME, {'title' => 'Hello World', 'completed' => true, 'due_date' => '2015-03-25' })
+task.save 
+
+
+# You can get Wunderlist::Task Object Wrapped by Array
+tasks = wl.tasks([LIST_NAME1, LIST_NAME2])
+=> [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
+
 
 # You can create and update note.
-task.notes.each do |note|
-  note.content = "Hello World"
-  note.update
-end
-
+note = task.note
 => #<Wunderlist::Note:0x00000000000>
+note.content = "Hello World"
+note.save
 
 ```
 
@@ -49,4 +51,6 @@ end
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
 # wunderlist-api
+

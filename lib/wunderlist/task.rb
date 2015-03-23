@@ -7,8 +7,7 @@ module Wunderlist
 
     include Wunderlist::Helper
 
-    attr_accessor :api, :title, :assignee_id, :completed, :recurrence_type, :recurrence_count, :due_date, :starred
-    attr_reader :id, :list_id
+    attr_accessor :api, :title, :assignee_id, :completed, :revision, :recurrence_type, :recurrence_count, :due_date, :starred, :id, :list_id, :created_at
 
     def initialize(options = {})
       @api = options['api']
@@ -24,7 +23,8 @@ module Wunderlist
     end
     
     def save
-      self.api.request :post, 'api/v1/tasks', self.to_hash
+      res = self.api.request :post, 'api/v1/tasks', self.to_hash
+      self.set_attrs(res)
     end
 
     def task_comments
@@ -41,24 +41,29 @@ module Wunderlist
 
     end
 
-    def notes
+    def note
       res = self.api.request :get, 'api/v1/notes', {:task_id => self.id}
-      notes = []
-
-      res.each do |note|
-        note = Wunderlist::Note.new(note)
-        note.api = self.api
-        notes << note
-      end
-
-      if notes.empty?
+      if !res[0].nil?
+        note = Wunderlist::Note.new(res[0])
+      else
         note = Wunderlist::Note.new('task_id' => self.id)
-        note.api = self.api
-        notes << note
       end
 
-      notes
+      note.api = self.api
+      note.task_id = self.id
 
+      note
+
+    end
+
+    def set_attrs(res)
+      self.id = res['id']
+      self.title = res['title']
+      self.created_at = res['created_at']
+      self.completed = res['completed']
+      self.list_id = res['list_id']
+      self.starred = res['starred']
+      self.revision = res['revision']
     end
 
   end

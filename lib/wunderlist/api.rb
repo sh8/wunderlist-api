@@ -43,13 +43,12 @@ module Wunderlist
 
     end
 
-    def create_task(list_name, attrs = {})
+    def new_task(list_name, attrs = {})
       list_name = [list_name]
       list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
       attrs['api'] = self
       @task = Wunderlist::Task.new(attrs)
-      @task.save
     end
 
     def request(method, url, options = {})
