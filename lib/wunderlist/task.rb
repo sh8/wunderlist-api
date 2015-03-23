@@ -24,7 +24,7 @@ module Wunderlist
     
     def save
       res = self.api.request :post, 'api/v1/tasks', self.to_hash
-      self.set_attrs(res)
+      set_attrs(res)
     end
 
     def task_comments
@@ -55,6 +55,8 @@ module Wunderlist
       note
 
     end
+
+    private
 
     def set_attrs(res)
       self.id = res['id']

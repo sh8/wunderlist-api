@@ -28,8 +28,10 @@ module Wunderlist
       else
         res = self.update
       end
-      self.set_attrs(res)
+      set_attrs(res)
     end
+
+    private
 
     def set_attrs(res)
       self.api = res['api']
