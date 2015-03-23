@@ -1,5 +1,6 @@
 require "wunderlist/version"
 require "wunderlist/task"
+require 'wunderlist/helper'
 require 'faraday'
 require 'json'
 
@@ -44,6 +45,7 @@ module Wunderlist
     end
 
     def new_task(list_name, attrs = {})
+      attrs.stringify_keys
       list_name = [list_name]
       list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id

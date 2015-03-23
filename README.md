@@ -27,7 +27,7 @@ wl = Wunderlist::API.new({
 
 
 # You can create Task
-task = wl.new_task(LIST_NAME, {'title' => 'Hello World', 'completed' => true, 'due_date' => '2015-03-25' })
+task = wl.new_task(LIST_NAME, {:title => 'Hello World', :completed => true, :due_date => '2015-03-25' })
 task.save 
 
 
