@@ -1,6 +1,6 @@
 require "wunderlist/version"
 require "wunderlist/task"
-require 'wunderlist/helper'
+require "wunderlist/list"
 require 'faraday'
 require 'json'
 
@@ -22,17 +22,37 @@ module Wunderlist
       @client_id = options[:client_id]
     end
 
+    def list(list_name)
+      list_name = [list_name]
+      list_id = get_list_ids(list_name)[0]
+      res_list = self.request :get, "api/v1/lists/#{list_id}"
+      list = Wunderlist::List.new(res_list)
+      list.api = self
+
+      list
+
+    end
+
     def lists
-      self.request :get, 'api/v1/lists'
+      res_lists = self.request :get, 'api/v1/lists'
+      lists = []
+      res_lists.each do |l|
+        list = Wunderlist::List.new(l)
+        list.api = self
+        lists << list
+      end
+
+      lists
+
     end
 
     def tasks(list_names = [], completed = false)
       list_ids = get_list_ids(list_names)
       tasks = []
       list_ids.each do |list_id|
-        list_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
-        if !list_tasks.empty?
-          list_tasks.each do |t|
+        res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+        if !res_tasks.empty?
+          res_tasks.each do |t|
             task = Wunderlist::Task.new(t)
             task.api = self
             tasks << task
@@ -116,9 +136,9 @@ module Wunderlist
     def get_list_ids(list_names = [])
       lists = self.lists
       if !list_names.empty?
-        lists = lists.select{|elm| list_names.include?(elm["title"])}
+        lists = lists.select{|elm| list_names.include?(elm.title)}
       end
-      lists.map{|list| list['id']}
+      lists.map{|list| list.id}
     end
 
   end
