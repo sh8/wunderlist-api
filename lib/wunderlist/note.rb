@@ -1,5 +1,4 @@
 require 'wunderlist/helper'
-require 'wunderlist/api'
 
 module Wunderlist
   class Note
@@ -16,19 +15,6 @@ module Wunderlist
       @created_at = options['created_at']
       @updated_at = options['updated_at']
       @revision = options['revision']
-    end
-
-    def update
-      self.api.request :put, "api/v1/notes/#{self.id}", self.to_hash
-    end
-
-    def save
-      if self.id.nil?
-        res = self.api.request :post, "api/v1/notes", self.to_hash
-      else
-        res = self.update
-      end
-      set_attrs(res)
     end
 
     private

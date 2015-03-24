@@ -1,6 +1,6 @@
-require 'wunderlist/helper'
 require 'wunderlist/note'
 require 'wunderlist/task_comment'
+require 'wunderlist/helper'
 
 module Wunderlist
   class Task
@@ -20,11 +20,6 @@ module Wunderlist
       @recurrence_count = options['recurrence_count']
       @due_date = options['due_date']
       @starred = options['starred']
-    end
-    
-    def save
-      res = self.api.request :post, 'api/v1/tasks', self.to_hash
-      set_attrs(res)
     end
 
     def task_comments

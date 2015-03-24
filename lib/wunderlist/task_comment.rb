@@ -5,9 +5,7 @@ module Wunderlist
 
     include Wunderlist::Helper
 
-    attr_accessor :text, :type
-    attr_reader   :id, :task_id, :revision, :created_at
-
+    attr_accessor :text, :type, :id, :task_id, :revision, :created_at
 
     def initialize(options = {})
       @api = options['api']
@@ -19,7 +17,17 @@ module Wunderlist
       @created_at = options['created_at']
     end
 
-    def save
+    private
+
+    def set_attrs(res)
+      self.api = res['api']
+      self.id = res['id']
+      self.task_id = res['task_id']
+      self.revision = res['revision']
+      self.text = res['text']
+      self.type = res['type']
+      self.created_at = res['created_at']
     end
+
   end
 end
