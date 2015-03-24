@@ -38,7 +38,7 @@ module Wunderlist
     private
 
     def get_plural_model_name
-      self.class.to_s.gsub('Wunderlist::','').downcase.pluralize
+      self.class.to_s.gsub('Wunderlist::','').tableize
     end
 
   end
