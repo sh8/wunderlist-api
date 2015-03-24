@@ -24,10 +24,8 @@ module Wunderlist
     def set_attrs(res)
       self.api = res['api']
       self.id = res['id']
-      self.task_id = res['task_id']
-      self.content = res['content']
+      self.title= res['content']
       self.created_at = res['created_at']
-      self.updated_at = res['updated_at']
       self.revision = res['revision']
     end
 
