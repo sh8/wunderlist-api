@@ -30,11 +30,23 @@ wl = Wunderlist::API.new({
 task = wl.new_task(LIST_NAME, {:title => 'Hello World', :completed => true, :due_date => '2015-03-25' })
 task.save 
 
+# You can get Wunderlist::List Object
+list = wl.list(LIST_NAME)
+=> #<Wunderlist::List:0x00000000000>
+
+# You can change List name
+list.title = "IMOKENPI"
+list.save
 
 # You can get Wunderlist::Task Object Wrapped by Array
-tasks = wl.tasks([LIST_NAME1, LIST_NAME2])
+
+tasks = list.tasks
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
+or
+
+tasks = wl.tasks([LIST_NAME1, LIST_NAME2])
+=> [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
 # You can create and update note.
 note = task.note
@@ -51,6 +63,7 @@ note.save
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
 
 # wunderlist-api
 
