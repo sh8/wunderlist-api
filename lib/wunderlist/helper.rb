@@ -26,6 +26,15 @@ module Wunderlist
       set_attrs(res)
     end
 
+    def destroy
+      model_name = get_plural_model_name
+      self.api.request :delete, "api/v1/#{model_name}/#{self.id}", {:revision => self.revision}
+      self.id = nil
+
+      self
+
+    end
+
     private
 
     def get_plural_model_name
