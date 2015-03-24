@@ -28,7 +28,14 @@ wl = Wunderlist::API.new({
 
 # You can create Task
 task = wl.new_task(LIST_NAME, {:title => 'Hello World', :completed => true, :due_date => '2015-03-25' })
+=> #<Wunderlist::Task:0x00000000000>
 task.save 
+
+# You can delete Task
+task.destroy
+=> #<Wunderlist::Task:0x00000000000>
+task.id
+=> nil
 
 # You can get Wunderlist::List Object
 list = wl.list(LIST_NAME)
@@ -38,8 +45,8 @@ list = wl.list(LIST_NAME)
 list.title = "IMOKENPI"
 list.save
 
-# You can get Wunderlist::Task Object Wrapped by Array
 
+# You can get Wunderlist::Task Object Wrapped by Array
 tasks = list.tasks
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
