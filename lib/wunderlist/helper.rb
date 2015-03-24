@@ -18,7 +18,6 @@ module Wunderlist
     
     def save
       model_name = get_plural_model_name
-      puts model_name
       if self.id.nil?
         res = self.api.request :post, "api/v1/#{model_name}", self.to_hash
       else
