@@ -37,6 +37,16 @@ module Wunderlist
 
     end
 
+    def new_task_comment(attrs = {})
+      attrs.stringify_keys
+      t_c = Wunderlist::TaskComment.new(attrs)
+      t_c.api = self.api
+      t_c.task_id = self.id
+
+      t_c
+
+    end
+
     def note
       res = self.api.request :get, 'api/v1/notes', {:task_id => self.id}
       if !res[0].nil?
