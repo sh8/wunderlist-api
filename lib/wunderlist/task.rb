@@ -14,6 +14,7 @@ module Wunderlist
       @id = options['id']
       @list_id = options['list_id']
       @title = options['title']
+      @revision = options['revision']
       @assignee_id = options['assignee_id']
       @completed = options['completed']
       @recurrence_type = options['recurrence_type']
