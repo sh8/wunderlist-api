@@ -19,7 +19,7 @@ Or install it yourself as:
 You should require this gem like;
 
 ```
-require 'wunderlist/api'
+require 'wunderlist'
 ```
 
 ## Usage

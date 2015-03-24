@@ -15,6 +15,10 @@ module Wunderlist
       @revision = options['revision']
     end
 
+    def new_task(list_name, attrs = {})
+      self.api.new_task(list_name, attrs)
+    end
+
     def tasks(completed = false)
       self.api.tasks([self.title])
     end
