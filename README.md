@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'wunderlist/api'
+    gem 'wunderlist-api'
 
 And then execute:
 
@@ -15,6 +15,12 @@ And then execute:
 Or install it yourself as:
 
     $ gem install wunderlist-api
+
+You should require this gem like;
+
+```
+require 'wunderlist/api'
+```
 
 ## Usage
 
