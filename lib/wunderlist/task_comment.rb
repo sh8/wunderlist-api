@@ -5,7 +5,7 @@ module Wunderlist
 
     include Wunderlist::Helper
 
-    attr_accessor :text, :type, :id, :task_id, :revision, :created_at
+    attr_accessor :text, :type, :id, :api, :task_id, :revision, :created_at
 
     def initialize(options = {})
       @api = options['api']
