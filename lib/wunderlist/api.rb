@@ -78,6 +78,7 @@ module Wunderlist
       when :get then self.get(url, options)
       when :post then self.post(url, options)
       when :put then self.put(url, options)
+      when :delete then self.delete(url, options)
       end
     end
 
@@ -131,6 +132,23 @@ module Wunderlist
 
       JSON.parse(response.body)
     end
+
+    def delete(url, options = {})
+
+      response = @conn.delete do |req|
+        req.url url
+        req.params[:revision] = options[:revision]
+        req.headers = {
+          'X-Access-Token' => self.access_token,
+          'X-Client-ID' => self.client_id,
+          'Content-Encoding' => 'UTF-8'
+        }
+      end
+
+      response.status
+
+    end
+
 
 
     def get_list_ids(list_names = [])
