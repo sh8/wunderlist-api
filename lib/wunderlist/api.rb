@@ -22,6 +22,14 @@ module Wunderlist
       @client_id = options[:client_id]
     end
 
+    def new_list(list_name)
+      list = Wunderlist::List.new('title' => list_name)
+      list.api = self
+
+      list
+
+    end
+
     def list(list_name)
       list_name = [list_name]
       list_id = get_list_ids(list_name)[0]
@@ -69,8 +77,11 @@ module Wunderlist
       list_name = [list_name]
       list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
-      attrs['api'] = self
-      @task = Wunderlist::Task.new(attrs)
+      task = Wunderlist::Task.new(attrs)
+      task.api = self
+
+      task
+
     end
 
     def request(method, url, options = {})
