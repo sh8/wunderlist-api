@@ -7,7 +7,7 @@ module Wunderlist
       i_vs = self.instance_variables
       i_vs.delete_if {|i_v| i_v.to_s == '@api'}
       hash = {}
-      instance_variables.each {|var| hash[var.to_s.delete("@")] = self.instance_variable_get(var) } 
+      i_vs.each {|var| hash[var.to_s.delete("@")] = self.instance_variable_get(var) } 
 
       hash
 
