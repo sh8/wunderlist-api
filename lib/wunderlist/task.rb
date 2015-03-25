@@ -1,5 +1,6 @@
 require 'wunderlist/note'
 require 'wunderlist/task_comment'
+require 'wunderlist/subtask'
 require 'wunderlist/helper'
 
 module Wunderlist

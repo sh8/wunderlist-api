@@ -7,7 +7,7 @@ module Wunderlist
 
     attr_accessor :id, :api, :task_id, :created_at, :created_by_id, :revision, :title
 
-    def intialize(attrs = {})
+    def initialize(attrs = {})
       @id = attrs['id']
       @api = attrs['api']
       @task_id = attrs['task_id']
