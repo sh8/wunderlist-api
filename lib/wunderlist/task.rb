@@ -9,18 +9,18 @@ module Wunderlist
 
     attr_accessor :api, :title, :assignee_id, :completed, :revision, :recurrence_type, :recurrence_count, :due_date, :starred, :id, :list_id, :created_at
 
-    def initialize(options = {})
-      @api = options['api']
-      @id = options['id']
-      @list_id = options['list_id']
-      @title = options['title']
-      @revision = options['revision']
-      @assignee_id = options['assignee_id']
-      @completed = options['completed']
-      @recurrence_type = options['recurrence_type']
-      @recurrence_count = options['recurrence_count']
-      @due_date = options['due_date']
-      @starred = options['starred']
+    def initialize(attrs = {})
+      @api = attrs['api']
+      @id = attrs['id']
+      @list_id = attrs['list_id']
+      @title = attrs['title']
+      @revision = attrs['revision']
+      @assignee_id = attrs['assignee_id']
+      @completed = attrs['completed']
+      @recurrence_type = attrs['recurrence_type']
+      @recurrence_count = attrs['recurrence_count']
+      @due_date = attrs['due_date']
+      @starred = attrs['starred']
     end
 
     def task_comments
@@ -62,16 +62,39 @@ module Wunderlist
 
     end
 
+    def new_subtask(attrs = {})
+      attrs.stringify_keys
+      s_t = Wunderlist::Subtask.new(attrs)
+      s_t.api = self.api
+      s_t.task_id = self.id
+
+      s_t
+
+    end
+
+    def subtasks
+      res = self.api.request :get, 'api/v1/subtasks', {:task_id => self.id}
+      subtasks = []
+      res.each do |r|
+        subtask = Wunderlist::Subtask.new(r)
+        subtask.api = self
+        subtasks << subtask
+      end
+
+      subtasks
+
+    end
+
     private
 
-    def set_attrs(res)
-      self.id = res['id']
-      self.title = res['title']
-      self.created_at = res['created_at']
-      self.completed = res['completed']
-      self.list_id = res['list_id']
-      self.starred = res['starred']
-      self.revision = res['revision']
+    def set_attrs(attrs = {})
+      self.id = attrs['id']
+      self.title = attrs['title']
+      self.created_at = attrs['created_at']
+      self.completed = attrs['completed']
+      self.list_id = attrs['list_id']
+      self.starred = attrs['starred']
+      self.revision = attrs['revision']
     end
 
   end

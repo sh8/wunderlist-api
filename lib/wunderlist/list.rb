@@ -7,12 +7,12 @@ module Wunderlist
 
     attr_accessor :id, :title, :api, :created_at, :revision
 
-    def initialize(options = {})
-      @api = options['api']
-      @id = options['id']
-      @title = options['title']
-      @created_at = options['created_at']
-      @revision = options['revision']
+    def initialize(attr = {})
+      @api = attrs['api']
+      @id = attrs['id']
+      @title = attrs['title']
+      @created_at = attrs['created_at']
+      @revision = attrs['revision']
     end
 
     def new_task(list_name, attrs = {})
@@ -25,12 +25,12 @@ module Wunderlist
 
     private
 
-    def set_attrs(res)
-      self.api = res['api']
-      self.id = res['id']
-      self.title= res['content']
-      self.created_at = res['created_at']
-      self.revision = res['revision']
+    def set_attrs(attrs = {})
+      self.api = attrs['api']
+      self.id = attrs['id']
+      self.title= attrs['content']
+      self.created_at = attrs['created_at']
+      self.revision = attrs['revision']
     end
 
   end
