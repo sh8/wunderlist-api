@@ -4,11 +4,13 @@ module Wunderlist
     require 'active_support/inflector'
 
     def to_hash
-      instance_variables = self.instance_variables
-      instance_variables.delete(':@api')
+      i_vs = self.instance_variables
+      i_vs.delete_if {|i_v| i_v.to_s == '@api'}
       hash = {}
-      instance_variables.each {|var| hash[var.to_s.delete("@")] = self.instance_variable_get(var) }
-      return hash
+      instance_variables.each {|var| hash[var.to_s.delete("@")] = self.instance_variable_get(var) } 
+
+      hash
+
     end
 
     def update
