@@ -20,7 +20,7 @@ module Wunderlist
     end
 
     def tasks(completed = false)
-      self.api.tasks([self.title])
+      self.api.tasks([self.title], completed)
     end
 
     private
