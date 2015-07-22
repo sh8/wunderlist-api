@@ -19,7 +19,7 @@ module Wunderlist
       self.api.new_task(self.title, attrs)
     end
 
-    def tasks(completed = false)
+    def tasks(completed: false)
       self.api.tasks([self.title], completed)
     end
 
