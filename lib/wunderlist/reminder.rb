@@ -1,4 +1,5 @@
 require 'wunderlist/helper'
+require 'time'
 
 module Wunderlist
   class Reminder
