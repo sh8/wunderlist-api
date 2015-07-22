@@ -1,6 +1,6 @@
 # Wunderlist::Api
 
-TODO: Write a gem description
+You can manage Your Wunderlist Data like ActiveRecord with Ruby
 
 ## Installation
 
@@ -27,13 +27,12 @@ require 'wunderlist'
 ```
 # You must create API CLIENT at first.
 wl = Wunderlist::API.new({
-:access_token => <your access token>,
-:client_id => <your client id>
+  :access_token => <your access token>,
+  :client_id => <your client id>
 })
 
-
 # You can create Task
-task = wl.new_task(LIST_NAME, {:title => 'Hello World', :completed => true, :due_date => '2015-03-25' })
+task = wl.new_task(LIST_NAME, {:title => 'Hello World', :completed => true, :due_date => '2015-03-25', :due_date => '2015-07-22'})
 => #<Wunderlist::Task:0x00000000000>
 task.save 
 
@@ -51,7 +50,6 @@ list = wl.list(LIST_NAME)
 list.title = "IMOKENPI"
 list.save
 
-
 # You can get Wunderlist::Task Object Wrapped by Array
 tasks = list.tasks
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
@@ -61,11 +59,36 @@ or
 tasks = wl.tasks([LIST_NAME1, LIST_NAME2])
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
+# You can get already completed tasks
+tasks = list.tasks(:completed => true)
+=> [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
+
+or
+
+tasks = wl.tasks([LIST_NAME1, LIST_NAME2], completed => true)
+=> [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
+
 # You can create and update note.
 note = task.note
 => #<Wunderlist::Note:0x00000000000>
 note.content = "Hello World"
 note.save
+
+# You can create and update reminder.
+note = task.reminder
+=> #<Wunderlist::Reminder:0x00000000000>
+reminder.date = "2015-07-22 17:00"
+reminder.save
+
+# You can create and update subtask.
+subtask = task.new_subtask({:title => "Hello World"})
+=> #<Wunderlist::Subtask:0x00000000000>
+subtask.save
+
+# You can get Wunderlist::Subtask Object Wrapped by Array
+subtasks = taks.subtasks
+=> [#<Wunderlist::Subtask:0x00000000000>, #<Wunderlist::Subtask:0x11111111111>, ...]
+
 
 ```
 
