@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["imokenpi3475@gmail.com"]
   spec.summary       = %q{WunderList Ruby API Client.}
   spec.description   = %q{You can manage Your Wunderlist Data with Ruby}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/shun3475/wunderlist-api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
