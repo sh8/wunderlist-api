@@ -15,7 +15,6 @@ module Wunderlist
     def initialize(options = {})
       @conn = Faraday::Connection.new(:url => API_URL) do |builder|
         builder.use Faraday::Request::UrlEncoded
-        builder.use Faraday::Response::Logger
         builder.use Faraday::Adapter::NetHttp
       end
       @access_token = options[:access_token]
