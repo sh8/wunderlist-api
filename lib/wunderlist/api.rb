@@ -1,6 +1,7 @@
 require "wunderlist/version"
 require "wunderlist/task"
 require "wunderlist/list"
+require "wunderlist/user"
 require 'faraday'
 require 'json'
 
@@ -69,6 +70,14 @@ module Wunderlist
 
       tasks
 
+    end
+
+    def user()
+      res_user = self.request :get, 'api/v1/user' 
+      user = Wunderlist::User.new(res_user) 
+      user.api = self
+  
+      user
     end
 
     def new_task(list_name, attrs = {})

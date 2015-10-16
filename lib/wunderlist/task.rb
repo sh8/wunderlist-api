@@ -9,7 +9,7 @@ module Wunderlist
 
     include Wunderlist::Helper
 
-    attr_accessor :api, :title, :assignee_id, :completed, :revision, :recurrence_type, :recurrence_count, :due_date, :starred, :id, :list_id, :created_at
+    attr_accessor :api, :title, :assignee_id, :completed, :revision, :recurrence_type, :recurrence_count, :due_date, :starred, :id, :list_id, :created_at, :completed_at, :completed_by_id
 
     def initialize(attrs = {})
       @api = attrs['api']
@@ -19,6 +19,8 @@ module Wunderlist
       @revision = attrs['revision']
       @assignee_id = attrs['assignee_id']
       @completed = attrs['completed']
+      @completed_at = attrs['completed_at']
+      @completed_by_id = attrs['completed_by_id']
       @recurrence_type = attrs['recurrence_type']
       @recurrence_count = attrs['recurrence_count']
       @due_date = attrs['due_date']
