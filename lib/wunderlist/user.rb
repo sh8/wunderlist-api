@@ -1,5 +1,3 @@
-
-
 module Wunderlist
   class User
 
