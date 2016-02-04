@@ -58,6 +58,17 @@ module Wunderlist
 
     end
 
+    def webhooks(list_name)
+      list_id = get_list_ids([list_name]).first
+
+      res_webhooks = self.request :get, 'api/v1/webhooks', { :list_id => list_id }
+      res_webhooks.reduce([]) do |webhooks, webhook|
+        webhook = Wunderlist::Webhook.new(webhook)
+        webhook.api = self
+        webhooks << webhook
+      end
+    end
+
     def tasks(list_names = [], completed = false)
       list_ids = get_list_ids(list_names)
       tasks = []
@@ -76,11 +87,12 @@ module Wunderlist
 
     end
 
+
     def user()
-      res_user = self.request :get, 'api/v1/user' 
-      user = Wunderlist::User.new(res_user) 
+      res_user = self.request :get, 'api/v1/user'
+      user = Wunderlist::User.new(res_user)
       user.api = self
-  
+
       user
     end
 
@@ -90,6 +102,18 @@ module Wunderlist
       list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
       task = Wunderlist::Task.new(attrs)
+      task.api = self
+
+      task
+
+    end
+
+    def new_webhook(list_name, attrs = {})
+      attrs.stringify_keys
+      list_name = [list_name]
+      list_id = get_list_ids(list_name)[0]
+      attrs['list_id'] = list_id
+      task = Wunderlist::Webhook.new(attrs)
       task.api = self
 
       task

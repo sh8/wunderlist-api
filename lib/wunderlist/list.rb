@@ -23,6 +23,9 @@ module Wunderlist
       self.api.tasks([self.title], completed)
     end
 
+    def webhooks
+      self.api.webhooks(self.title)
+    end
     private
 
     def set_attrs(attrs = {})
