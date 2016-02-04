@@ -12,23 +12,26 @@ module Wunderlist
     attr_reader :access_token
     attr_reader :client_id
 
+    attr_accessor :conn
+
     API_URL = "https://a.wunderlist.com"
 
     def initialize(options = {})
-      @conn = Faraday::Connection.new(:url => API_URL) do |builder|
+      @access_token = options[:access_token]
+      @client_id = options[:client_id]
+    end
+
+    def conn
+      @conn ||= Faraday::Connection.new(:url => API_URL) do |builder|
         builder.use Faraday::Request::UrlEncoded
         builder.use Faraday::Adapter::NetHttp
       end
-      @access_token = options[:access_token]
-      @client_id = options[:client_id]
     end
 
     def new_list(list_name)
       list = Wunderlist::List.new('title' => list_name)
       list.api = self
-
       list
-
     end
 
     def list(list_name)
@@ -104,7 +107,7 @@ module Wunderlist
 
     def get(url, options = {})
 
-      response = @conn.get do |req|
+      response = conn.get do |req|
         req.url url
         if options
           options.each do |k, v|
@@ -123,7 +126,7 @@ module Wunderlist
 
     def post(url, options = {})
 
-      response = @conn.post do |req|
+      response = conn.post do |req|
         req.url url
         req.body = options.to_json
         req.headers = {
@@ -139,7 +142,7 @@ module Wunderlist
 
     def put(url, options = {})
 
-      response = @conn.put do |req|
+      response = conn.put do |req|
         req.url url
         req.body = options.to_json
         req.headers = {
@@ -155,7 +158,7 @@ module Wunderlist
 
     def delete(url, options = {})
 
-      response = @conn.delete do |req|
+      response = conn.delete do |req|
         req.url url
         req.params[:revision] = options[:revision]
         req.headers = {
