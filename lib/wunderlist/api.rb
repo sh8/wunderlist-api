@@ -156,7 +156,7 @@ module Wunderlist
         req.headers = {
           'X-Access-Token' => self.access_token,
           'X-Client-ID' => self.client_id,
-          'Content-Type' => 'text/json',
+          'Content-Type' => 'application/json',
           'Content-Encoding' => 'UTF-8'
         }
       end
@@ -172,7 +172,7 @@ module Wunderlist
         req.headers = {
           'X-Access-Token' => self.access_token,
           'X-Client-ID' => self.client_id,
-          'Content-Type' => 'text/json',
+          'Content-Type' => 'application/json',
           'Content-Encoding' => 'UTF-8'
         }
       end
