@@ -1,7 +1,8 @@
-require "wunderlist/version"
-require "wunderlist/task"
 require "wunderlist/list"
+require "wunderlist/task"
 require "wunderlist/user"
+require "wunderlist/webhook"
+require "wunderlist/version"
 require 'faraday'
 require 'json'
 
