@@ -12,12 +12,16 @@ module Wunderlist
     end
 
     def update
-      self.api.request :put, "api/v1/#{plural_model_name}/#{self.id}", self.to_hash
+      self.api.request :put, resource_path, self.to_hash
+    end
+
+    def create
+      self.api.request :post, path, self.to_hash
     end
 
     def save
       if self.id.nil?
-        res = self.api.request :post, "api/v1/#{plural_model_name}", self.to_hash
+        res = self.create
       else
         res = self.update
       end
@@ -25,10 +29,18 @@ module Wunderlist
     end
 
     def destroy
-      self.api.request :delete, "api/v1/#{plural_model_name}/#{self.id}", {:revision => self.revision}
+      self.api.request :delete, resource_path, {:revision => self.revision}
       self.id = nil
 
       self
+    end
+
+    def resource_path
+      "api/v1/#{plural_model_name}/#{self.id}"
+    end
+
+    def path
+      "api/v1/#{plural_model_name}"
     end
 
     def model_name
