@@ -6,8 +6,8 @@ module Wunderlist
     attr_accessor :api, :id, :list_id, :created_by_id, :processor_type, :url, :configuration, :created_at
 
     def initialize(attrs = {})
-      @list_id = attrs['list_id']
       @id = attrs['id']
+      @list_id = attrs['list_id']
       @created_by_id = attrs['created_by_id']
       @processor_type = attrs['processor_type']
       @url = attrs['url']

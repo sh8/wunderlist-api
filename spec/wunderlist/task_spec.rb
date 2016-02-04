@@ -6,7 +6,7 @@ describe Wunderlist::Task do
 
   describe "a task" do
     it 'has a hash representation' do
-      expect(task.to_hash.keys).to eq(%w(
+      expect(task.to_hash.keys).to include(*%w(
         id
         list_id
         title

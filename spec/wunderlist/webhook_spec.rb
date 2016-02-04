@@ -6,7 +6,7 @@ describe Wunderlist::Webhook do
 
   describe "a webhook" do
     it 'has a hash representation' do
-      expect(webhook.to_hash.keys).to eq(%w(
+      expect(webhook.to_hash.keys).to include(*%w(
         id
         list_id
         created_by_id
