@@ -1,7 +1,8 @@
-require "wunderlist/version"
-require "wunderlist/task"
 require "wunderlist/list"
+require "wunderlist/task"
 require "wunderlist/user"
+require "wunderlist/webhook"
+require "wunderlist/version"
 require 'faraday'
 require 'json'
 
@@ -11,23 +12,26 @@ module Wunderlist
     attr_reader :access_token
     attr_reader :client_id
 
+    attr_accessor :conn
+
     API_URL = "https://a.wunderlist.com"
 
     def initialize(options = {})
-      @conn = Faraday::Connection.new(:url => API_URL) do |builder|
+      @access_token = options[:access_token]
+      @client_id = options[:client_id]
+    end
+
+    def conn
+      @conn ||= Faraday::Connection.new(:url => API_URL) do |builder|
         builder.use Faraday::Request::UrlEncoded
         builder.use Faraday::Adapter::NetHttp
       end
-      @access_token = options[:access_token]
-      @client_id = options[:client_id]
     end
 
     def new_list(list_name)
       list = Wunderlist::List.new('title' => list_name)
       list.api = self
-
       list
-
     end
 
     def list(list_name)
@@ -54,6 +58,17 @@ module Wunderlist
 
     end
 
+    def webhooks(list_name)
+      list_id = get_list_ids([list_name]).first
+
+      res_webhooks = self.request :get, 'api/v1/webhooks', { :list_id => list_id }
+      res_webhooks.reduce([]) do |webhooks, webhook|
+        webhook = Wunderlist::Webhook.new(webhook)
+        webhook.api = self
+        webhooks << webhook
+      end
+    end
+
     def tasks(list_names = [], completed = false)
       list_ids = get_list_ids(list_names)
       tasks = []
@@ -72,11 +87,12 @@ module Wunderlist
 
     end
 
+
     def user()
-      res_user = self.request :get, 'api/v1/user' 
-      user = Wunderlist::User.new(res_user) 
+      res_user = self.request :get, 'api/v1/user'
+      user = Wunderlist::User.new(res_user)
       user.api = self
-  
+
       user
     end
 
@@ -86,6 +102,18 @@ module Wunderlist
       list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
       task = Wunderlist::Task.new(attrs)
+      task.api = self
+
+      task
+
+    end
+
+    def new_webhook(list_name, attrs = {})
+      attrs.stringify_keys
+      list_name = [list_name]
+      list_id = get_list_ids(list_name)[0]
+      attrs['list_id'] = list_id
+      task = Wunderlist::Webhook.new(attrs)
       task.api = self
 
       task
@@ -103,7 +131,7 @@ module Wunderlist
 
     def get(url, options = {})
 
-      response = @conn.get do |req|
+      response = conn.get do |req|
         req.url url
         if options
           options.each do |k, v|
@@ -122,13 +150,13 @@ module Wunderlist
 
     def post(url, options = {})
 
-      response = @conn.post do |req|
+      response = conn.post do |req|
         req.url url
         req.body = options.to_json
         req.headers = {
           'X-Access-Token' => self.access_token,
           'X-Client-ID' => self.client_id,
-          'Content-Type' => 'text/json',
+          'Content-Type' => 'application/json',
           'Content-Encoding' => 'UTF-8'
         }
       end
@@ -138,13 +166,13 @@ module Wunderlist
 
     def put(url, options = {})
 
-      response = @conn.put do |req|
+      response = conn.put do |req|
         req.url url
         req.body = options.to_json
         req.headers = {
           'X-Access-Token' => self.access_token,
           'X-Client-ID' => self.client_id,
-          'Content-Type' => 'text/json',
+          'Content-Type' => 'application/json',
           'Content-Encoding' => 'UTF-8'
         }
       end
@@ -154,7 +182,7 @@ module Wunderlist
 
     def delete(url, options = {})
 
-      response = @conn.delete do |req|
+      response = conn.delete do |req|
         req.url url
         req.params[:revision] = options[:revision]
         req.headers = {
