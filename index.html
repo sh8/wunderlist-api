@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Wunderlist-api by shun3475</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Wunderlist-api</h1>
+        <h2>can manage your wunderlist data.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/shun3475/wunderlist-api/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/shun3475/wunderlist-api/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/shun3475/wunderlist-api" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="wunderlistapi" class="anchor" href="#wunderlistapi" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Wunderlist::Api</h1>
+
+<p>You can manage Your Wunderlist Data like ActiveRecord with Ruby</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'wunderlist-api'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install wunderlist-api
+</code></pre>
+
+<p>You should require this gem like;</p>
+
+<pre><code>require 'wunderlist'
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<pre><code># You must create API CLIENT at first.
+wl = Wunderlist::API.new({
+  :access_token =&gt; &lt;your access token&gt;,
+  :client_id =&gt; &lt;your client id&gt;
+})
+
+# You can create Task
+task = wl.new_task(LIST_NAME, {:title =&gt; 'Hello World', :completed =&gt; true, :due_date =&gt; '2015-03-25', :due_date =&gt; '2015-07-22'})
+=&gt; #&lt;Wunderlist::Task:0x00000000000&gt;
+task.save 
+
+# You can delete Task
+task.destroy
+=&gt; #&lt;Wunderlist::Task:0x00000000000&gt;
+task.id
+=&gt; nil
+
+# You can get Wunderlist::List Object
+list = wl.list(LIST_NAME)
+=&gt; #&lt;Wunderlist::List:0x00000000000&gt;
+
+# You can change List name
+list.title = "IMOKENPI"
+list.save
+
+# You can get Wunderlist::Task Object Wrapped by Array
+tasks = list.tasks
+=&gt; [#&lt;Wunderlist::Task:0x00000000000&gt;, #&lt;Wunderlist::Task:0x11111111111&gt;, ...]
+
+or
+
+tasks = wl.tasks([LIST_NAME1, LIST_NAME2])
+=&gt; [#&lt;Wunderlist::Task:0x00000000000&gt;, #&lt;Wunderlist::Task:0x11111111111&gt;, ...]
+
+# You can get already completed tasks
+tasks = list.tasks(:completed =&gt; true)
+=&gt; [#&lt;Wunderlist::Task:0x00000000000&gt;, #&lt;Wunderlist::Task:0x11111111111&gt;, ...]
+
+or
+
+tasks = wl.tasks([LIST_NAME1, LIST_NAME2], completed =&gt; true)
+=&gt; [#&lt;Wunderlist::Task:0x00000000000&gt;, #&lt;Wunderlist::Task:0x11111111111&gt;, ...]
+
+# You can create and update note.
+note = task.note
+=&gt; #&lt;Wunderlist::Note:0x00000000000&gt;
+note.content = "Hello World"
+note.save
+
+# You can create and update reminder.
+note = task.reminder
+=&gt; #&lt;Wunderlist::Reminder:0x00000000000&gt;
+reminder.date = "2015-07-22 17:00"
+reminder.save
+
+# You can create and update subtask.
+subtask = task.new_subtask({:title =&gt; "Hello World"})
+=&gt; #&lt;Wunderlist::Subtask:0x00000000000&gt;
+subtask.save
+
+# You can get Wunderlist::Subtask Object Wrapped by Array
+subtasks = taks.subtasks
+=&gt; [#&lt;Wunderlist::Subtask:0x00000000000&gt;, #&lt;Wunderlist::Subtask:0x11111111111&gt;, ...]
+
+
+</code></pre>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it ( <a href="http://github.com/">http://github.com/</a>/wunderlist-api/fork )</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
