@@ -95,6 +95,23 @@ module Wunderlist
     end
 
 
+    def tasks_by_list_id(list_id, completed = false)
+      tasks = []
+        res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+        if !res_tasks.empty?
+          res_tasks.each do |t|
+            task = Wunderlist::Task.new(t)
+            task.api = self
+            tasks << task
+          end
+        # end
+      end
+
+      tasks
+
+    end
+
+
     def user()
       res_user = self.request :get, 'api/v1/user'
       user = Wunderlist::User.new(res_user)
