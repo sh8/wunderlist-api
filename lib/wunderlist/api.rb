@@ -45,6 +45,13 @@ module Wunderlist
 
     end
 
+    def list_id(id)
+      res_list = self.request :get, "api/v1/lists/#{id}"
+      list = Wunderlist::List.new(res_list)
+      list.api = self
+      list
+    end
+
     def lists
       res_lists = self.request :get, 'api/v1/lists'
       lists = []
