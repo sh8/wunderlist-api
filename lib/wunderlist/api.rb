@@ -45,8 +45,9 @@ module Wunderlist
 
     end
 
-    def list_id(id)
+    def list_by_id(id)
       res_list = self.request :get, "api/v1/lists/#{id}"
+      return nil if res_list['error']
       list = Wunderlist::List.new(res_list)
       list.api = self
       list
