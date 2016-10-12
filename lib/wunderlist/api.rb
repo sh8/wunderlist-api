@@ -79,6 +79,7 @@ module Wunderlist
 
     def webhooks_by_list_id(list_id)
       res_webhooks = self.request :get, 'api/v1/webhooks', { :list_id => list_id }
+      return nil if res_webhooks['error']
       res_webhooks.reduce([]) do |webhooks, webhook|
         webhook = Wunderlist::Webhook.new(webhook)
         webhook.api = self
