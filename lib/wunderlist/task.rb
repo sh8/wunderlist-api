@@ -27,7 +27,7 @@ module Wunderlist
       @starred = attrs['starred']
     end
 
-    def task_comments
+    def comments
       res = self.api.request :get, 'api/v1/task_comments', {:task_id => self.id}
       task_comments = []
 
@@ -36,19 +36,15 @@ module Wunderlist
         task_comment.api = self.api
         task_comments << task_comment
       end
-
       task_comments
-
     end
 
-    def new_task_comment(attrs = {})
+    def new_comment(attrs = {})
       attrs.stringify_keys
       t_c = Wunderlist::TaskComment.new(attrs)
       t_c.api = self.api
       t_c.task_id = self.id
-
       t_c
-
     end
 
     def note
@@ -61,12 +57,26 @@ module Wunderlist
 
       note.api = self.api
       note.task_id = self.id
-
       note
-
     end
 
-    def reminder
+    # def new_note(attrs = {})
+    #   attrs.stringify_keys
+    #   note = Wunderlist::Note.new(attrs)
+    #   note.api = self.api
+    #   note.task_id = self.id
+    #   note
+    # end
+
+    def files
+      # TODO
+    end
+
+    def new_file(attrs = {})
+      # TODO
+    end
+
+    def reminders
       res = self.api.request :get, 'api/v1/reminders', {:task_id => self.id}
       if !res[0].nil?
         reminder = Wunderlist::Reminder.new(res[0])
@@ -76,19 +86,16 @@ module Wunderlist
 
       reminder.api = self.api
       reminder.task_id = self.id
-
       reminder
-
     end
 
-    def new_subtask(attrs = {})
+    def new_reminder
+      # Need to be tested 
       attrs.stringify_keys
-      s_t = Wunderlist::Subtask.new(attrs)
-      s_t.api = self.api
-      s_t.task_id = self.id
-
-      s_t
-
+      rem = Wunderlist::Reminder.new(attrs)
+      rem.api = self.api
+      rem.task_id = self.id
+      rem
     end
 
     def subtasks
@@ -99,10 +106,16 @@ module Wunderlist
         subtask.api = self
         subtasks << subtask
       end
-
       #This will return tasks in backwards order, so reverse them
       subtasks.reverse
+    end
 
+    def new_subtask(attrs = {})
+      attrs.stringify_keys
+      s_t = Wunderlist::Subtask.new(attrs)
+      s_t.api = self.api
+      s_t.task_id = self.id
+      s_t
     end
 
     private
