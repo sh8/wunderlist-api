@@ -54,7 +54,6 @@ module Wunderlist
 
     def webhooks_by_list_id(list_id)
       res_webhooks = self.request :get, 'api/v1/webhooks', { :list_id => list_id }
-      p res_webhooks
       if res_webhooks.is_a? Array
         res_webhooks.reduce([]) do |webhooks, webhook|
           webhook = Wunderlist::Webhook.new(webhook)
@@ -64,6 +63,22 @@ module Wunderlist
       elsif res_webhooks["error"]
         return nil
       end
+    end
+
+
+
+    def tasks(list_names = [], completed = false)
+      list_ids = get_list_ids(list_names)
+      tasks = []
+      res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+      if !res_tasks.empty?
+        res_tasks.each do |t|
+          task = Wunderlist::Task.new(t)
+          task.api = self
+          tasks << task
+        end
+      end
+      tasks
     end
 
     def tasks_by_list_id(list_id, completed = false)
