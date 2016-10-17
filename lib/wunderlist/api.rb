@@ -11,7 +11,6 @@ module Wunderlist
 
     attr_reader :access_token
     attr_reader :client_id
-
     attr_accessor :conn
 
     API_URL = "https://a.wunderlist.com"
@@ -34,15 +33,12 @@ module Wunderlist
       list
     end
 
-    def list(list_name)
-      list_name = [list_name]
-      list_id = get_list_ids(list_name)[0]
-      res_list = self.request :get, "api/v1/lists/#{list_id}"
+    def list_by_id(id)
+      res_list = self.request :get, "api/v1/lists/#{id}"
+      return nil if res_list['error']
       list = Wunderlist::List.new(res_list)
       list.api = self
-
       list
-
     end
 
     def lists
@@ -53,71 +49,80 @@ module Wunderlist
         list.api = self
         lists << list
       end
-
       lists
-
     end
 
-    def webhooks(list_name)
-      list_id = get_list_ids([list_name]).first
-
+    def webhooks_by_list_id(list_id)
       res_webhooks = self.request :get, 'api/v1/webhooks', { :list_id => list_id }
-      res_webhooks.reduce([]) do |webhooks, webhook|
-        webhook = Wunderlist::Webhook.new(webhook)
-        webhook.api = self
-        webhooks << webhook
+      if res_webhooks.is_a? Array
+        res_webhooks.reduce([]) do |webhooks, webhook|
+          webhook = Wunderlist::Webhook.new(webhook)
+          webhook.api = self
+          webhooks << webhook
+        end
+      elsif res_webhooks["error"]
+        return nil
       end
     end
+
+
 
     def tasks(list_names = [], completed = false)
       list_ids = get_list_ids(list_names)
       tasks = []
-      list_ids.each do |list_id|
-        res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
-        if !res_tasks.empty?
-          res_tasks.each do |t|
-            task = Wunderlist::Task.new(t)
-            task.api = self
-            tasks << task
-          end
+      res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+      if !res_tasks.empty?
+        res_tasks.each do |t|
+          task = Wunderlist::Task.new(t)
+          task.api = self
+          tasks << task
         end
       end
-
       tasks
-
     end
 
+    def tasks_by_list_id(list_id, completed = false)
+      tasks = []
+      res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
+      if !res_tasks.empty?
+        res_tasks.each do |t|
+          task = Wunderlist::Task.new(t)
+          task.api = self
+          tasks << task
+        end
+      end
+      tasks
+    end
 
     def user()
       res_user = self.request :get, 'api/v1/user'
       user = Wunderlist::User.new(res_user)
       user.api = self
-
       user
     end
 
-    def new_task(list_name, attrs = {})
+    def new_task_by_list_id(list_id, attrs = {})
       attrs.stringify_keys
-      list_name = [list_name]
-      list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
       task = Wunderlist::Task.new(attrs)
       task.api = self
-
       task
-
     end
 
-    def new_webhook(list_name, attrs = {})
+    def new_webhook_by_list_id(list_id, attrs = {})
       attrs.stringify_keys
-      list_name = [list_name]
-      list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
-      task = Wunderlist::Webhook.new(attrs)
-      task.api = self
+      webhook = Wunderlist::Webhook.new(attrs)
+      webhook.api = self
+      webhook
+    end
 
-      task
-
+    def get_list_ids(list_names = [])
+      lists = self.lists
+      if !list_names.empty?
+        lists = lists.select{|elm| list_names.include?(elm.title)}
+      end
+      lists.map{|list| list.id}
     end
 
     def request(method, url, options = {})
@@ -130,7 +135,6 @@ module Wunderlist
     end
 
     def get(url, options = {})
-
       response = conn.get do |req|
         req.url url
         if options
@@ -143,13 +147,10 @@ module Wunderlist
           'X-Client-ID' => self.client_id
         }
       end
-
       JSON.parse(response.body)
-
     end
 
     def post(url, options = {})
-
       response = conn.post do |req|
         req.url url
         req.body = options.to_json
@@ -160,12 +161,10 @@ module Wunderlist
           'Content-Encoding' => 'UTF-8'
         }
       end
-
       JSON.parse(response.body)
     end
 
     def put(url, options = {})
-
       response = conn.put do |req|
         req.url url
         req.body = options.to_json
@@ -176,12 +175,10 @@ module Wunderlist
           'Content-Encoding' => 'UTF-8'
         }
       end
-
       JSON.parse(response.body)
     end
 
     def delete(url, options = {})
-
       response = conn.delete do |req|
         req.url url
         req.params[:revision] = options[:revision]
@@ -191,19 +188,7 @@ module Wunderlist
           'Content-Encoding' => 'UTF-8'
         }
       end
-
       response.status
-
-    end
-
-
-
-    def get_list_ids(list_names = [])
-      lists = self.lists
-      if !list_names.empty?
-        lists = lists.select{|elm| list_names.include?(elm.title)}
-      end
-      lists.map{|list| list.id}
     end
 
   end
