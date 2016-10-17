@@ -60,13 +60,31 @@ module Wunderlist
       note
     end
 
-    # def new_note(attrs = {})
-    #   attrs.stringify_keys
-    #   note = Wunderlist::Note.new(attrs)
-    #   note.api = self.api
-    #   note.task_id = self.id
-    #   note
-    # end
+    def update_or_create_note(attrs)
+      if self.note.id
+        modify_note(attrs)
+      else
+        new_note(attrs)
+      end
+    end
+
+    def new_note(attrs = {})
+      attrs.stringify_keys
+      note = Wunderlist::Note.new(attrs)
+      note.api = self.api
+      note.task_id = self.id
+      note
+    end
+
+    def modify_note(attrs = {})
+      # attrs.stringify_keys
+      note = self.note
+      note.api = self.api
+      note.task_id = self.id
+      note.content = attrs[:content]
+      p note
+      note
+    end
 
     def files
       # TODO
@@ -90,7 +108,7 @@ module Wunderlist
     end
 
     def new_reminder
-      # Need to be tested 
+      # Need to be tested
       attrs.stringify_keys
       rem = Wunderlist::Reminder.new(attrs)
       rem.api = self.api
