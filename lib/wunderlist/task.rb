@@ -1,5 +1,6 @@
 require 'wunderlist/note'
 require 'wunderlist/task_comment'
+require 'wunderlist/task_file'
 require 'wunderlist/subtask'
 require 'wunderlist/reminder'
 require 'wunderlist/helper'
@@ -103,6 +104,20 @@ module Wunderlist
 
       #This will return tasks in backwards order, so reverse them
       subtasks.reverse
+
+    end
+
+    def files
+      res = self.api.request :get, 'api/v1/files', {:task_id => self.id}
+      task_files = []
+
+      res.each do |t_c|
+        task_file = Wunderlist::TaskFile.new(t_c)
+        task_file.api = self.api
+        task_files << task_file
+      end
+
+      task_files
 
     end
 
