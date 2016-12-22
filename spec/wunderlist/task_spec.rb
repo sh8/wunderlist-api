@@ -12,6 +12,7 @@ describe Wunderlist::Task do
         title
         revision
         assignee_id
+        created_at
         completed
         completed_at
         completed_by_id

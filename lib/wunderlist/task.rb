@@ -18,6 +18,7 @@ module Wunderlist
       @title = attrs['title']
       @revision = attrs['revision']
       @assignee_id = attrs['assignee_id']
+      @created_at = attrs['created_at']
       @completed = attrs['completed']
       @completed_at = attrs['completed_at']
       @completed_by_id = attrs['completed_by_id']
