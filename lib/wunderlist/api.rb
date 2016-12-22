@@ -34,9 +34,9 @@ module Wunderlist
       list
     end
 
-    def list(list_name)
-      list_name = [list_name]
-      list_id = get_list_ids(list_name)[0]
+    def list(list_name_or_id)
+      list_id = get_list_ids(list_name_or_id).first
+
       res_list = self.request :get, "api/v1/lists/#{list_id}"
       list = Wunderlist::List.new(res_list)
       list.api = self
@@ -58,8 +58,8 @@ module Wunderlist
 
     end
 
-    def webhooks(list_name)
-      list_id = get_list_ids([list_name]).first
+    def webhooks(list_name_or_id)
+      list_id = get_list_ids(list_name_or_id).first
 
       res_webhooks = self.request :get, 'api/v1/webhooks', { :list_id => list_id }
       res_webhooks.reduce([]) do |webhooks, webhook|
@@ -69,8 +69,8 @@ module Wunderlist
       end
     end
 
-    def tasks(list_names = [], completed = false)
-      list_ids = get_list_ids(list_names)
+    def tasks(list_names_or_ids = [], completed = false)
+      list_ids = get_list_ids(list_names_or_ids)
       tasks = []
       list_ids.each do |list_id|
         res_tasks = self.request :get, 'api/v1/tasks', {:list_id => list_id, :completed => completed}
@@ -108,10 +108,9 @@ module Wunderlist
 
     end
 
-    def new_webhook(list_name, attrs = {})
+    def new_webhook(list_name_or_id, attrs = {})
+      list_id = get_list_ids(list_name_or_id).first
       attrs.stringify_keys
-      list_name = [list_name]
-      list_id = get_list_ids(list_name)[0]
       attrs['list_id'] = list_id
       task = Wunderlist::Webhook.new(attrs)
       task.api = self
@@ -199,6 +198,10 @@ module Wunderlist
 
 
     def get_list_ids(list_names = [])
+      return list_names if list_names.all? {|i| i.is_a?(Integer) }
+      return [list_names] if list_names.is_a? Integer
+      list_names = [list_names] if list_names.is_a? String
+
       lists = self.lists
       if !list_names.empty?
         lists = lists.select{|elm| list_names.include?(elm.title)}
