@@ -198,7 +198,9 @@ module Wunderlist
 
 
     def get_list_ids(list_names = [])
-      return list_names if list_names.all? {|i| i.is_a?(Integer) }
+      if list_names.is_a? Array && list_names.all? {|i| i.is_a?(Integer) }
+        return list_names
+      end
       return [list_names] if list_names.is_a? Integer
       list_names = [list_names] if list_names.is_a? String
 
