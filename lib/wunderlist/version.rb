@@ -1,3 +1,3 @@
 module Wunderlist
-  VERSION = "1.0.5"
+  VERSION = "1.1.2"
 end

@@ -27,14 +27,14 @@ require 'wunderlist'
 ```
 # You must create API CLIENT at first.
 wl = Wunderlist::API.new({
-  :access_token => <your access token>,
-  :client_id => <your client id>
+  access_token: <your access token>,
+  client_id: <your client id>
 })
 
 # You can create Task
-task = wl.new_task(LIST_NAME, {:title => 'Hello World', :completed => true, :due_date => '2015-03-25', :due_date => '2015-07-22'})
+task = wl.new_task(LIST_NAME, {title: 'Hello World', completed: false, due_date: '2015-03-25'})
 => #<Wunderlist::Task:0x00000000000>
-task.save 
+task.save
 
 # You can delete Task
 task.destroy
@@ -56,16 +56,16 @@ tasks = list.tasks
 
 or
 
-tasks = wl.tasks([LIST_NAME1, LIST_NAME2])
+tasks = wl.tasks([LIST_NAME_OR_ID_1, LIST_NAME_OR_ID_2])
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
 # You can get already completed tasks
-tasks = list.tasks(:completed => true)
+tasks = list.tasks(completed: true)
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
 or
 
-tasks = wl.tasks([LIST_NAME1, LIST_NAME2], completed => true)
+tasks = wl.tasks([LIST_NAME_OR_ID_1, LIST_NAME_IR_ID_2], completed: true)
 => [#<Wunderlist::Task:0x00000000000>, #<Wunderlist::Task:0x11111111111>, ...]
 
 # You can create and update note.
@@ -81,7 +81,7 @@ reminder.date = "2015-07-22 17:00"
 reminder.save
 
 # You can create and update subtask.
-subtask = task.new_subtask({:title => "Hello World"})
+subtask = task.new_subtask({title: "Hello World"})
 => #<Wunderlist::Subtask:0x00000000000>
 subtask.save
 
@@ -94,7 +94,7 @@ subtasks = taks.subtasks
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/wunderlist-api/fork )
+1. Fork it ( http://github.com/sh8/wunderlist-api/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
